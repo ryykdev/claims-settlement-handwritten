@@ -12,5 +12,15 @@
 #
 # The placeholder below only exists so `docker compose up` works out of the box.
 
-FROM alpine:3.20
-CMD ["sh", "-c", "echo 'app placeholder: replace app/Dockerfile with your service (see README.md)'; sleep 2147483647"]
+# stage 1 - build kotlin app
+FROM eclipse-temurin:25-jdk AS builder
+WORKDIR /app
+COPY . .
+RUN ./gradlew bootJar --no-daemon
+
+# stage 2 - run app
+FROM eclipse-temurin:25-jre-alpine
+WORKDIR /app
+COPY --from=builder app/build/libs/*.jar claims.jar
+EXPOSE 8000
+CMD ["java", "-jar", "claims.jar"]

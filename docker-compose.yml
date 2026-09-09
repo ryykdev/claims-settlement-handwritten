@@ -1,4 +1,5 @@
 services:
+
   db:
     image: postgres:16-alpine
     environment:
@@ -22,7 +23,6 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://challenge:challenge@db:5432/challenge
-    # example mapping; adjust freely if your service uses another port
     ports:
       - "8000:8000"
     volumes:
