@@ -24,7 +24,7 @@ services:
     environment:
       DATABASE_URL: postgresql://challenge:challenge@db:5432/challenge
     ports:
-      - "8000:8000"
+      - "8000:8080"
     volumes:
       - ./data:/data:ro
 
