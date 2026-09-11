@@ -19,6 +19,10 @@
 ```
 2026-07-27 02:14:09.000	ELV-100455	KAU-004521	3188	Tobias Krüger	301	Möbelhaus Schäfer KG	TRK55901	Trek	FX+ 2	2749.00	2024-06-01	2027-05-31	36	4.20	CANCEL?? (eventhough it ran 36 months)
 ```
+2. inplausible date
+```
+    <field name="incident_date">0204-06-11</field>
+```
 
 ## AI usage
 
