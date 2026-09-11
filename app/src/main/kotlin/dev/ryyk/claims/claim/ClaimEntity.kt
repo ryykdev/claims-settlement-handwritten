@@ -1,0 +1,43 @@
+package dev.ryyk.claims.claim
+
+import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.Transient
+import org.springframework.data.domain.Persistable
+import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.Table
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+@Table("claim")
+data class ClaimEntity(
+    val updated: LocalDateTime,
+    @Id @Column("external_id") val externalId: Int = 0,
+    val claimType: ClaimType,
+    @Column("sale_order_number") val saleOrderNumber: String, // foreign key from contract
+    @Column("incident_date") val incidentDate: LocalDate?,
+    @Column("reported_date") val reportedDate: LocalDate?,
+    @Column("repair_cost") val repairCost: BigDecimal,
+    @Column("police_report_number") val policeReportNumber: String,
+    val description: String,
+): Persistable<Int> {
+    @Transient
+    private var isNewEntity: Boolean = true
+    override fun getId(): Int = externalId
+    override fun isNew(): Boolean = isNewEntity
+}
+
+enum class ClaimType {
+    THEFT,
+    PARTIAL_DAMAGE,
+    TOTAL_DAMAGE,
+    PAYMENT_DEFAULT,
+    UNKNOWN;
+
+companion object {
+    fun fromRaw(value: String?): ClaimType {
+        if (value.isNullOrBlank() || value == "False") return UNKNOWN
+        return entries.find { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
+    }
+}
+}
