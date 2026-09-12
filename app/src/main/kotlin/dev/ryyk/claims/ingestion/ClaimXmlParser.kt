@@ -55,14 +55,12 @@ class ClaimXmlParser() {
 
     private fun mapToClaim(fields: Map<String, String>): ClaimEntity {
         // Parse tuple format: "[2841, 'Anna Müller']"
-        val (partnerId, partnerName) = parseErpTuple(fields["partner_id"])
-        val (companyId, companyName) = parseErpTuple(fields["customer_company_id"])
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
         // using !! because if this fails we need fix it fast
         return ClaimEntity(
             updated = LocalDateTime.parse(fields["updated"]!!, dateTimeFormatter),
-            externalId = fields["external_id"]!!.toInt(),
+            externalId = fields["external_id"]!!.toLong(),
             claimType = ClaimType.fromRaw(fields["value"]),
             saleOrderNumber = fields["sale_order_number"].orEmpty(),
             incidentDate = fields["incident_date"]
@@ -73,10 +71,16 @@ class ClaimXmlParser() {
                 ?.takeUnless { it.isBlank() || it.equals("False", ignoreCase = true) }
                 ?.let { LocalDate.parse(it) }
             , // can be 'False'
-            repairCost = (fields["repair_cost"]!!
-                .replace(".", "")
-                .replace(",", "")
-                .toBigDecimal() / 100.00.toBigDecimal()),
+            repairCost = fields["repair_cost"]
+                .let { raw ->
+                    if (raw.equals("False", ignoreCase = true)) {
+                        java.math.BigDecimal.ZERO
+                    } else {
+                        raw!!.replace(".", "")
+                            .replace(",", "")
+                            .toBigDecimal() / 100.toBigDecimal()
+                    }
+                },
             policeReportNumber = fields["police_report_number"].orEmpty(),
             description = fields["description"].orEmpty(),
         )

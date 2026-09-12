@@ -12,20 +12,26 @@ import java.time.LocalDateTime
 @Table("claim")
 data class ClaimEntity(
     val updated: LocalDateTime,
-    @Id @Column("external_id") val externalId: Int = 0,
-    val claimType: ClaimType,
-    @Column("sale_order_number") val saleOrderNumber: String, // foreign key from contract
+    @Id @Column("external_id") val externalId: Long = 0,
+    @Column("claim_type") val claimType: ClaimType,
+    @Column("sale_order_number") val saleOrderNumber: String?, // foreign key from contract
     @Column("incident_date") val incidentDate: LocalDate?,
     @Column("reported_date") val reportedDate: LocalDate?,
     @Column("repair_cost") val repairCost: BigDecimal,
     @Column("police_report_number") val policeReportNumber: String,
     val description: String,
-): Persistable<Int> {
+): Persistable<Long> {
     @Transient
     private var isNewEntity: Boolean = true
-    override fun getId(): Int = externalId
+    override fun getId(): Long = externalId
     override fun isNew(): Boolean = isNewEntity
+    // for updating exisiting rows
+    fun markExisting() {
+        isNewEntity = false
+    }
 }
+
+
 
 enum class ClaimType {
     THEFT,

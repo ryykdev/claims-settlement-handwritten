@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS claim;
 DROP TABLE IF EXISTS contract;
 CREATE TABLE IF NOT EXISTS contract (
     updated TIMESTAMP NOT NULL,
@@ -16,4 +17,20 @@ CREATE TABLE IF NOT EXISTS contract (
     term INT,
     insurance_rate NUMERIC(12, 2),
     status VARCHAR(50) NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS claim (
+
+    updated TIMESTAMP NOT NULL,
+    external_id BIGINT NOT NULL UNIQUE,
+    claim_type VARCHAR(255) NOT NULL,
+    sale_order_number VARCHAR(255),
+    incident_date DATE,
+    reported_date DATE,
+    repair_cost NUMERIC(12,2) NOT NULL,
+    police_report_number VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    CONSTRAINT fk_claim_contract
+        FOREIGN KEY (sale_order_number)
+        REFERENCES contract (sale_order_number)
     );

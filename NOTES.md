@@ -15,14 +15,17 @@
 ## Data findings
 
 <!-- What surprised you in the XML exports and how you handled each case. -->
-1. Contract: CANCEL eventhough it ran 36 months
-```
+1. Contract: CANCEL eventhough it ran 36 months - lets raise MANUAL_REVIEW on this case in decision flow.
+```bash
 2026-07-27 02:14:09.000	ELV-100455	KAU-004521	3188	Tobias Krüger	301	Möbelhaus Schäfer KG	TRK55901	Trek	FX+ 2	2749.00	2024-06-01	2027-05-31	36	4.20	CANCEL?? (eventhough it ran 36 months)
 ```
-2. inplausible date
-```
+2. implausible date: handle later in decision flow
+```xml
     <field name="incident_date">0204-06-11</field>
 ```
+3. Ingestion: Idempotent but always as a whole and in order - especially claims02 will overwrite claims01 but also vice versa, so order of ingestion is important.
+
+
 
 ## AI usage
 
