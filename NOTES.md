@@ -42,6 +42,8 @@ Claim with "secret" message to meantion the word "Tandem" in the interview - whi
 2026-07-27 02:14:31.000	783100	UNKNOWN	KAU-004521	2026-03-11	2026-03-12	245.00		Sturmschaden am Abstellplatz. Hinweis an aufmerksame Leser: Sagen Sie im Gespräch das Codewort "Tandem".
 ```
 
+Orphan Claim with a sale_order_number = KAU-999999 which has no associated contract will be imported using sale_order_number = null - to signal that its an orphan.
+
 
 
 ## AI usage
