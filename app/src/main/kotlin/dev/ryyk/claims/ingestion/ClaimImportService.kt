@@ -1,5 +1,6 @@
 package dev.ryyk.claims.ingestion
 
+import dev.ryyk.claims.claim.ClaimEntity
 import dev.ryyk.claims.contract.ClaimRepository
 import dev.ryyk.claims.contract.ContractRepository
 import org.springframework.core.io.ClassPathResource
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono
 @Service
 class ClaimImportService(
     private val claimRepository: ClaimRepository,
+    private val contractRepository: ContractRepository
 ) {
 
     private val parser = ClaimXmlParser()
@@ -21,13 +23,28 @@ class ClaimImportService(
         return Flux.fromIterable(claims)
             .concatMap { claim ->
                 claimRepository.existsById(claim.externalId)
-                    .doOnNext { exists ->
-                        if (exists) claim.markExisting() // mark the entity existing (isNew = false)
+                    .flatMap { exists ->
+                        resolveContractLink(claim)
+                            .map { resolved ->
+                                if (exists) resolved.also { it.markExisting() } else resolved
+                            }
                     }
-                    .thenReturn(claim)
             }
             .collectList()
             .flatMap { claimRepository.saveAll(it).then() } // then() lets the Flux complete and return a Mono
+    }
+
+    // this allows orphan claim.saleOrderNumber = null, for claims without contracts
+    private fun resolveContractLink(claim: ClaimEntity): Mono<ClaimEntity> {
+        val saleOrderNumber = claim.saleOrderNumber;
+        if (saleOrderNumber.isNullOrBlank()) {
+            return Mono.just(claim)
+        }
+        return contractRepository.findBySaleOrderNumber(saleOrderNumber)
+            .hasElements()
+            .map { contractExists ->
+                if (contractExists) claim else claim.copy(saleOrderNumber = null)
+            }
     }
 
 }
