@@ -37,6 +37,10 @@ Contract missing lease end date:
 2026-07-27 02:14:09.000	ELV-100377	KAU-004311	3001	René Böhm	214	Kanzlei Böttcher & Partner	SPZ44120	Specialized	Turbo Vado 4.0	4650.00	2023-05-01	2026-04-30	36	5.80	DONE
 ```
 
+Claim with "secret" message to meantion the word "Tandem" in the interview - which shows the interviewers that you had a close look at the data.
+```bash
+2026-07-27 02:14:31.000	783100	UNKNOWN	KAU-004521	2026-03-11	2026-03-12	245.00		Sturmschaden am Abstellplatz. Hinweis an aufmerksame Leser: Sagen Sie im Gespräch das Codewort "Tandem".
+```
 
 
 

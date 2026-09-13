@@ -20,18 +20,17 @@ data class ClaimEntity(
     @Column("repair_cost") val repairCost: BigDecimal,
     @Column("police_report_number") val policeReportNumber: String,
     val description: String,
-): Persistable<Long> {
+) : Persistable<Long> {
     @Transient
     private var isNewEntity: Boolean = true
     override fun getId(): Long = externalId
     override fun isNew(): Boolean = isNewEntity
+
     // for updating exisiting rows
     fun markExisting() {
         isNewEntity = false
     }
 }
-
-
 
 enum class ClaimType {
     THEFT,
@@ -40,10 +39,11 @@ enum class ClaimType {
     PAYMENT_DEFAULT,
     UNKNOWN;
 
-companion object {
-    fun fromRaw(value: String?): ClaimType {
-        if (value.isNullOrBlank() || value == "False") return UNKNOWN
-        return entries.find { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
+    companion object {
+        fun fromRaw(value: String?): ClaimType {
+            if (value.isNullOrBlank() || value == "False") return UNKNOWN
+            return entries.find { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
+        }
     }
-}
+
 }

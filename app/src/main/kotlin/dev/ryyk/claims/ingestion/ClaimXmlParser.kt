@@ -61,7 +61,7 @@ class ClaimXmlParser() {
         return ClaimEntity(
             updated = LocalDateTime.parse(fields["updated"]!!, dateTimeFormatter),
             externalId = fields["external_id"]!!.toLong(),
-            claimType = ClaimType.fromRaw(fields["value"]),
+            claimType = ClaimType.fromRaw(fields["type"]),
             saleOrderNumber = fields["sale_order_number"].orEmpty(),
             incidentDate = fields["incident_date"]
                 ?.takeUnless { it.isBlank() || it.equals("False", ignoreCase = true) }
@@ -81,7 +81,9 @@ class ClaimXmlParser() {
                             .toBigDecimal() / 100.toBigDecimal()
                     }
                 },
-            policeReportNumber = fields["police_report_number"].orEmpty(),
+            policeReportNumber = fields["police_report_number"]
+                ?.takeUnless { it.isBlank() || it.equals("False", ignoreCase = true) }
+                ?: "",
             description = fields["description"].orEmpty(),
         )
     }
