@@ -1,5 +1,8 @@
-# Health check (includes Postgres status)
+# health check 
 curl -i http://localhost:8000/actuator/health
 
-# Your Greeting endpoint
+# hello test     
 curl -i http://localhost:8000/hello
+
+# ingest
+curl -i -X POST "http://localhost:8000/ingest"

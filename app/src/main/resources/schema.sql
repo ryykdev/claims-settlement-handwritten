@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS claim;
 DROP TABLE IF EXISTS contract;
 CREATE TABLE IF NOT EXISTS contract (
     updated TIMESTAMP NOT NULL,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
     sale_order_number VARCHAR(255) NOT NULL UNIQUE,
     partner_id INT,
     partner_name VARCHAR(255),

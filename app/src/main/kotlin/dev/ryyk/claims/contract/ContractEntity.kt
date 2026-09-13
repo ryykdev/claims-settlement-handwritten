@@ -32,6 +32,11 @@ data class ContractEntity(
         private var isNewEntity: Boolean = true
     override fun getId(): String = name
     override fun isNew(): Boolean = isNewEntity
+
+    // for updating existing rows
+    fun markExisting() {
+        isNewEntity = false
+    }
     }
 
 enum class Status {

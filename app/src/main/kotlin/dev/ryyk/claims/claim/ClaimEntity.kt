@@ -26,7 +26,7 @@ data class ClaimEntity(
     override fun getId(): Long = externalId
     override fun isNew(): Boolean = isNewEntity
 
-    // for updating exisiting rows
+    // for updating existing rows
     fun markExisting() {
         isNewEntity = false
     }
