@@ -9,4 +9,5 @@ import reactor.core.publisher.Flux
 @Repository
 interface ClaimRepository : ReactiveCrudRepository<ClaimEntity, Long> {
     fun findByExternalId(externalId: Long): Flux<ClaimEntity>
+    fun findBySaleOrderNumber(saleOrderNumber: String): Flux<ClaimEntity>
 }

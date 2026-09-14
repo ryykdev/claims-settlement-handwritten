@@ -1,6 +1,7 @@
 package dev.ryyk.claims.ingestion
 
 import dev.ryyk.claims.claim.ClaimEntity
+import dev.ryyk.claims.claim.ClaimState
 import dev.ryyk.claims.claim.ClaimType
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -62,6 +63,7 @@ class ClaimXmlParser() {
             updated = LocalDateTime.parse(fields["updated"]!!, dateTimeFormatter),
             externalId = fields["external_id"]!!.toLong(),
             claimType = ClaimType.fromRaw(fields["type"]),
+            claimState = ClaimState.fromRaw(fields["state"]),
             saleOrderNumber = fields["sale_order_number"].orEmpty(),
             incidentDate = fields["incident_date"]
                 ?.takeUnless { it.isBlank() || it.equals("False", ignoreCase = true) }
@@ -88,7 +90,7 @@ class ClaimXmlParser() {
         )
     }
 
-    private fun parseErpTuple(raw: String?): Pair<Int?, String?> {
+    private fun parseXmlTuple(raw: String?): Pair<Int?, String?> {
         if (raw.isNullOrBlank() || raw == "False") return Pair(null, null)
         val regex = """\[(\d+),\s*'(.*)'\]""".toRegex()
         val match = regex.find(raw) ?: return Pair(null, null)

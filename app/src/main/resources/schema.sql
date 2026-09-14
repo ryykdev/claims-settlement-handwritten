@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS claim (
     updated TIMESTAMP NOT NULL,
     external_id BIGINT NOT NULL UNIQUE,
     claim_type VARCHAR(255) NOT NULL,
+    claim_state VARCHAR(255) NOT NULL,
     sale_order_number VARCHAR(255),
     incident_date DATE,
     reported_date DATE,

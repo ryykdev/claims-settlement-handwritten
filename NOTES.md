@@ -4,7 +4,21 @@
 
 ## How to run & demo
 
-<!-- Exact commands: how to ingest, how to decide claims, how to run tests. -->
+Run app
+```bash
+docker compuse up
+````
+
+Unit-tests (no db)
+```bash
+cd app && ./gradlew test
+```
+
+integration tests (with db)
+```bash
+docker compose up -d
+cd app && ./gradlew test
+```
 
 ## Design decisions
 
