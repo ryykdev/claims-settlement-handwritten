@@ -12,13 +12,13 @@ import java.time.LocalDateTime
 @Table("claim")
 data class ClaimEntity(
     val updated: LocalDateTime,
-    @Id @Column("external_id") val externalId: Long = 0,
+    @Id @Column("id") val externalId: Long = 0,
     @Column("claim_type") val claimType: ClaimType,
     @Column("claim_state") val claimState: ClaimState,
     @Column("sale_order_number") val saleOrderNumber: String?, // foreign key from contract
-    @Column("incident_date") val incidentDate: LocalDate?,
+    @Column("incident_date") val incidentDate: LocalDate?, // claim requires an incident date
     @Column("reported_date") val reportedDate: LocalDate?,
-    @Column("repair_cost") val repairCost: BigDecimal,
+    @Column("repair_cost") val repairCost: BigDecimal?,
     @Column("police_report_number") val policeReportNumber: String,
     val description: String,
 ) : Persistable<Long> {

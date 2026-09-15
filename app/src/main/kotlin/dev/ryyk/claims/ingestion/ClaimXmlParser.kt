@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service
 import java.io.InputStream
 import javax.xml.parsers.DocumentBuilderFactory
 import org.w3c.dom.Element
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -75,12 +77,13 @@ class ClaimXmlParser() {
             , // can be 'False'
             repairCost = fields["repair_cost"]
                 .let { raw ->
-                    if (raw.equals("False", ignoreCase = true)) {
+                    if (raw.equals("False", ignoreCase = true) || raw == null) {
                         java.math.BigDecimal.ZERO
                     } else {
-                        raw!!.replace(".", "")
+                        val number = raw
+                            .replace(".", "")
                             .replace(",", "")
-                            .toBigDecimal() / 100.toBigDecimal()
+                            BigDecimal(number).divide(BigDecimal(100), 2, RoundingMode.HALF_UP)
                     }
                 },
             policeReportNumber = fields["police_report_number"]

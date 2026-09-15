@@ -26,7 +26,7 @@ data class ContractEntity(
     @Column("end_leasing") val endLeasing: LocalDate?,
     @Column("term") val term: Int = 0,
     @Column("insurance_rate") val insuranceRate: BigDecimal,
-    @Column("status") val status: Status,
+    @Column("status") val status: ContractStatus,
     ): Persistable<String> {
         @Transient
         private var isNewEntity: Boolean = true
@@ -39,14 +39,14 @@ data class ContractEntity(
     }
     }
 
-enum class Status {
+enum class ContractStatus {
     ACTIVE,
     DONE,
     CANCEL,
     UNKNOWN;
 
     companion object {
-        fun fromRaw(value: String?): Status {
+        fun fromRaw(value: String?): ContractStatus {
             if (value.isNullOrBlank() || value == "False") return UNKNOWN
             return entries.find { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
         }

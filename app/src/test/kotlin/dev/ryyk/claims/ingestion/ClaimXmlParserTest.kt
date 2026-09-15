@@ -28,7 +28,7 @@ class ClaimXmlParserTest {
     }
 
     @Test
-    fun `parse orphan clame without sale_order_number`() {
+    fun `parse orphan claim without sale_order_number`() {
         val claims = ClassPathResource("data/claims_batch_1.xml")
             .inputStream.use { parser.parse(it) }
         assertEquals(16, claims.size)
@@ -37,5 +37,37 @@ class ClaimXmlParserTest {
         assertEquals(ClaimType.THEFT, orphan.claimType)
         assertEquals("KAU-999999", orphan.saleOrderNumber) // saved to db as null
         assertEquals(BigDecimal.ZERO, orphan.repairCost)  // "False" → 0
+    }
+
+    @Test
+    fun `parse claim with payout`() {
+        val claims = ClassPathResource("data/claims_batch_2.xml")
+            .inputStream.use { parser.parse(it) }
+        val claim = claims.first { it.externalId == 780110L }
+        assertEquals(780110L, claim.externalId)
+        assertEquals(ClaimType.PARTIAL_DAMAGE, claim.claimType)
+        assertEquals(ClaimState.AWAITING_DOCUMENTS, claim.claimState)
+        assertEquals("KAU-003945", claim.saleOrderNumber) // saved to db as null
+        println(claim.repairCost)
+        assertEquals(BigDecimal("412.50"), claim.repairCost)  // "False" → 0
+        assertEquals("", claim.policeReportNumber)
+        assertEquals("Sturz auf Radweg, Schaltwerk und Laufrad beschädigt", claim.description)
+    }
+
+    @Test
+    fun `parse claim with payout 1234,56`() {
+        val claims = ClassPathResource("data/claims_batch_1.xml")
+            .inputStream.use { parser.parse(it) }
+        val claim = claims.first { it.externalId == 783770L }
+        assertEquals(783770L, claim.externalId)
+        assertEquals(ClaimType.PARTIAL_DAMAGE, claim.claimType)
+        assertEquals(ClaimState.AWAITING_DOCUMENTS, claim.claimState)
+        assertEquals("KAU-004666", claim.saleOrderNumber) // saved to db as null
+        assertEquals(LocalDate.of(2026,3,2), claim.incidentDate)
+        assertEquals(null, claim.reportedDate)
+        println(claim.repairCost)
+        assertEquals(BigDecimal("1234.56"), claim.repairCost)  // "False" → 0
+        assertEquals("", claim.policeReportNumber)
+        assertEquals("Mutwillige Beschädigung am Abstellplatz, Gutachten liegt vor", claim.description)
     }
 }

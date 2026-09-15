@@ -1,7 +1,7 @@
 package dev.ryyk.claims.ingestion
 
 import dev.ryyk.claims.contract.ContractEntity
-import dev.ryyk.claims.contract.Status
+import dev.ryyk.claims.contract.ContractStatus
 import org.springframework.stereotype.Service
 import java.io.InputStream
 import javax.xml.parsers.DocumentBuilderFactory
@@ -80,7 +80,7 @@ class ContractXmlParser() {
             , // can be 'False'
             term = fields["end_leasing"]!!.toInt(),
             insuranceRate = fields["term"]!!.toBigDecimal(),
-            status = Status.fromRaw(fields["insurance_rate"]),
+            status = ContractStatus.fromRaw(fields["insurance_rate"]),
         )
     }
 

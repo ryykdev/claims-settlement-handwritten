@@ -31,6 +31,8 @@ cd app && ./gradlew test
 
 3. Orphan claims without contracts will be ingested using fk_sale_order_number = null
 
+4. Decision on invalid dates will be flagged with MANUAL_REVIEW, so the date can be corrected.
+
 
 ## Data findings
 

@@ -1,8 +1,10 @@
+DROP TABLE IF EXISTS decision;
 DROP TABLE IF EXISTS claim;
 DROP TABLE IF EXISTS contract;
+
 CREATE TABLE IF NOT EXISTS contract (
     updated TIMESTAMP NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) PRIMARY KEY,
     sale_order_number VARCHAR(255) NOT NULL UNIQUE,
     partner_id INT,
     partner_name VARCHAR(255),
@@ -20,9 +22,8 @@ CREATE TABLE IF NOT EXISTS contract (
     );
 
 CREATE TABLE IF NOT EXISTS claim (
-
     updated TIMESTAMP NOT NULL,
-    external_id BIGINT NOT NULL UNIQUE,
+    id BIGINT PRIMARY KEY,
     claim_type VARCHAR(255) NOT NULL,
     claim_state VARCHAR(255) NOT NULL,
     sale_order_number VARCHAR(255),
@@ -35,3 +36,14 @@ CREATE TABLE IF NOT EXISTS claim (
         FOREIGN KEY (sale_order_number)
         REFERENCES contract (sale_order_number)
     );
+
+CREATE TABLE IF NOT EXISTS decision (
+    id BIGINT PRIMARY KEY,
+    datetime TIMESTAMP NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    reason TEXT NOT NULL,
+    payout NUMERIC(12,2) NOT NULL,
+    CONSTRAINT fk_decision_claim
+        FOREIGN KEY (id)
+        REFERENCES claim (id)
+);
